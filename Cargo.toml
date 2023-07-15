@@ -62,6 +62,7 @@ glob = "0.3.1"
 strum = { version = "0.24", features = ["derive"] }
 # hashbrown 0.13 requires rust 1.61
 hashbrown = "0.12.3"
+ignore = { version= "0.4" , optional = true }
 
 [dev-dependencies]
 # This is the last version of assert_cmd that supports rustc 1.57.
@@ -85,6 +86,7 @@ name = "difft"
 path = "src/main.rs"
 
 [features]
+enable-ignore = ["ignore"]
 
 [patch.crates-io]
 # https://github.com/mbrubeck/tree_magic/pull/13 hasn't been merged yet.

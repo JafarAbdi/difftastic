@@ -7,7 +7,10 @@ use std::{
     path::{Path, PathBuf},
 };
 
+#[cfg(feature = "enable-ignore")]
+use ignore::WalkBuilder;
 use rustc_hash::FxHashSet;
+#[cfg(not(feature = "enable-ignore"))]
 use walkdir::WalkDir;
 
 use crate::exit_codes::EXIT_BAD_ARGUMENTS;
@@ -219,7 +222,11 @@ pub fn guess_content(bytes: &[u8]) -> ProbableFileKind {
 
 /// All the files in `dir`, including subdirectories.
 fn relative_file_paths_in_dir(dir: &Path) -> Vec<PathBuf> {
-    WalkDir::new(dir)
+    #[cfg(feature = "enable-ignore")]
+    let walker = WalkBuilder::new(dir).hidden(false).build();
+    #[cfg(not(feature = "enable-ignore"))]
+    let walker = WalkDir::new(dir);
+    walker
         .into_iter()
         .filter_map(Result::ok)
         .map(|entry| entry.into_path())
